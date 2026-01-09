@@ -15,8 +15,13 @@ public class JobWorker {
     public void startWorker() {
         Thread worker = new Thread(() -> {
             while (true) {
-                Job job = jobQueueService.pollJob();
-                processJob(job);
+                try {
+                    Job job = jobQueueService.pollJob();
+                    processJob(job);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
             }
         });
         worker.setDaemon(true);

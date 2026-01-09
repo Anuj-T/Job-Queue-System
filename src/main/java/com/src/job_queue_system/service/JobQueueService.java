@@ -5,11 +5,14 @@ import com.src.job_queue_system.model.JobPayload;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
 
 @Service
 public class JobQueueService {
-    private final Map<String, Job> jobs = new HashMap<>();
-    private final Queue<Job> queue = new LinkedList<>();
+    private final Map<String, Job> jobs = new ConcurrentHashMap<>();
+    private final BlockingQueue<Job> queue = new LinkedBlockingQueue<Job>();
 
     public Job submitJob(String type, JobPayload jobPayload) {
         String jobId = UUID.randomUUID().toString();
@@ -19,8 +22,11 @@ public class JobQueueService {
         return job;
     }
 
-    public Job pollJob() {
-        return queue.poll();
+    public Job pollJob() throws InterruptedException {
+        return queue.take();
     }
 
+    public Job getJob(String jobId) {
+        return jobs.get(jobId);
+    }
 }

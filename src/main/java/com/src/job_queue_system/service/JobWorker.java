@@ -2,6 +2,7 @@ package com.src.job_queue_system.service;
 
 import com.src.job_queue_system.model.Job;
 import com.src.job_queue_system.model.JobStatus;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,6 +13,7 @@ public class JobWorker {
         this.jobQueueService = jobQueueService;
     }
 
+    @PostConstruct
     public void startWorker() {
         Thread worker = new Thread(() -> {
             while (true) {

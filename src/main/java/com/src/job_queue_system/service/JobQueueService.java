@@ -29,4 +29,8 @@ public class JobQueueService {
     public Job getJob(String jobId) {
         return jobs.get(jobId);
     }
+
+    public List<Job> getAllJobs() {
+        return new ArrayList<>(jobs.values());
+    }
 }

@@ -7,10 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/jobs")
+@CrossOrigin(origins = "*")
 public class JobController {
     private final JobQueueService queueService;
     private final ObjectMapper objectMapper;
@@ -35,5 +37,11 @@ public class JobController {
         JobPayload payload = objectMapper.convertValue(payloadObj, JobPayload.class);
         Job job = queueService.submitJob(type, payload);
         return ResponseEntity.ok(job);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Job>> getAllJobs() {
+        List<Job> jobs = queueService.getAllJobs();
+        return ResponseEntity.ok(jobs);
     }
 }

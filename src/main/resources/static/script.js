@@ -12,8 +12,6 @@ async function submitJob() {
           body: JSON.stringify({ type, payload })
       });
       const job = await response.json();
-      console.log("reached here");
-      console.log(job);
       addJobToTable(job);
 }
 
@@ -40,3 +38,19 @@ function createCell(value) {
 function formatTime(isoTime) {
     return new Date(isoTime).toLocaleString();
 }
+
+async function updateJobs() {
+    try {
+        const response = await fetch(API_BASE);
+        const jobs = await response.json();
+        const tbody = document.getElementById('jobTableBody');
+        tbody.innerHTML = '';
+        jobs.forEach(job => addJobToTable(job));
+
+    } catch (error) {
+        console.error('Error in fetching job updates:', error);
+    }
+}
+
+setInterval(updateJobs, 5000);
+updateJobs();

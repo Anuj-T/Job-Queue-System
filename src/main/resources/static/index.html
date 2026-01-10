@@ -16,7 +16,7 @@
 
     <label>Payload:</label>
     <textarea id="payload">{"to": "user@example.com", "subject": "Hello", "body": "This is a test email"}</textarea>
-    <button onclick="submitJob()">Submit Job</button>
+    <button id="submitButton">Submit Job</button>
 </div>
 
 <div class="section">
@@ -31,6 +31,7 @@
             <th>Result</th>
         </tr>
         </thead>
+        <tbody id="jobTableBody"></tbody>
     </table>
 </div>
 

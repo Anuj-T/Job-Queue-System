@@ -34,6 +34,6 @@ public class JobController {
 
         JobPayload payload = objectMapper.convertValue(payloadObj, JobPayload.class);
         Job job = queueService.submitJob(type, payload);
-        return ResponseEntity.accepted().body("success");
+        return ResponseEntity.ok(job);
     }
 }

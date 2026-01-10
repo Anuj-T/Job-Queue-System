@@ -5,6 +5,8 @@ import com.src.job_queue_system.model.JobStatus;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class JobWorker {
     private final JobQueueService jobQueueService;
@@ -36,9 +38,11 @@ public class JobWorker {
             Thread.sleep(3000);
             job.setStatus(JobStatus.COMPLETED);
             job.setResult("Job processed successfully");
+            job.setUpdatedAt(LocalDateTime.now());
         } catch (Exception e) {
             job.setStatus(JobStatus.FAILED);
             job.setResult("Job processing failed");
+            job.setUpdatedAt(LocalDateTime.now());
         }
     }
 }

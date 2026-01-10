@@ -49,4 +49,9 @@ public class JobController {
         List<Job> jobs = queueService.getAllJobs();
         return ResponseEntity.ok(jobs);
     }
+
+    @GetMapping("/{jobId}")
+    public Job getJob(@PathVariable String jobId) {
+        return queueService.getJob(jobId);
+    }
 }

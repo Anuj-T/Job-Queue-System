@@ -16,3 +16,24 @@ button {
     background: black;
     color: white;
 }
+
+section {
+    width: 90%;
+    margin: 20px auto;
+}
+
+#jobTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#jobTable th,
+#jobTable td {
+    border: 1px solid white;
+    padding: 8px;
+}
+
+#jobTable th {
+    background-color: lightgray;
+    text-align: left;
+}

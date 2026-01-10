@@ -1,11 +1,12 @@
 package com.src.job_queue_system.controller;
 
 import com.src.job_queue_system.model.Job;
-import com.src.job_queue_system.model.JobPayload;
 import com.src.job_queue_system.service.JobQueueService;
+import com.src.job_queue_system.validator.JobValidator;
+import com.src.job_queue_system.validator.PayloadValidator;
+import com.src.job_queue_system.validator.ValidationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
 import java.util.Map;
@@ -15,30 +16,34 @@ import java.util.Map;
 @CrossOrigin(origins = "*")
 public class JobController {
     private final JobQueueService queueService;
-    private final ObjectMapper objectMapper;
+    private final JobValidator jobValidator;
+    private final PayloadValidator payloadValidator;
 
-    public JobController(JobQueueService queueService, ObjectMapper objectMapper) {
+    public JobController(JobQueueService queueService, JobValidator jobValidator, PayloadValidator payloadValidator) {
         this.queueService = queueService;
-        this.objectMapper = objectMapper;
+        this.jobValidator = jobValidator;
+        this.payloadValidator = payloadValidator;
     }
 
     @PostMapping
     public ResponseEntity<?> submitJob(@RequestBody Map<String, Object> request) {
-        String type = request.get("type").toString();
-        Object payloadObj = request.get("payload");
+        try {
+            String type = request.get("type").toString();
+            Object payloadObj = request.get("payload");
 
-        if (type.isBlank()) {
-            return ResponseEntity.badRequest().body("error"); // TODO : Add validation here
-        }
-        if (payloadObj == null) {
-            return ResponseEntity.badRequest().body("error");
-        }
+            jobValidator.validateJobSubmission(type, payloadObj);
 
-        JobPayload payload = objectMapper.convertValue(payloadObj, JobPayload.class);
-        Job job = queueService.submitJob(type, payload);
-        return ResponseEntity.ok(job);
+            Map<String, Object> payload = (Map<String, Object>) payloadObj;
+            if("email".equalsIgnoreCase(type)) {
+                payloadValidator.validateEmailPayload(payload);
+            }
+
+            Job job = queueService.submitJob(type, payload);
+            return ResponseEntity.ok(job);
+        } catch (ValidationException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
-
     @GetMapping
     public ResponseEntity<List<Job>> getAllJobs() {
         List<Job> jobs = queueService.getAllJobs();

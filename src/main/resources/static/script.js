@@ -7,6 +7,10 @@ async function submitJob() {
     try {
           const type = document.getElementById('jobType').value;
           const payloadText = document.getElementById('payload').value;
+          if (!payloadText) {
+              statusDiv.textContent = "Error: Job payload cannot be empty";
+              return;
+          }
           const payload = JSON.parse(payloadText);
           const response = await fetch(API_BASE, {
               method: 'POST',
@@ -25,7 +29,7 @@ async function submitJob() {
           addJobToTable(job);
 
     } catch (error) {
-          statusDiv.textContent = "Invalid payload JSON";
+          statusDiv.textContent = "Error : Invalid payload JSON";
     }
 
 }

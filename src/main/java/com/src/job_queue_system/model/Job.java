@@ -14,6 +14,7 @@ public class Job {
     private JobStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String result;
 
     public Job(String jobId, String type, JobPayload payload) {
         this.jobId = jobId;

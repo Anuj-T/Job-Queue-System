@@ -35,8 +35,10 @@ public class JobWorker {
         try {
             Thread.sleep(3000);
             job.setStatus(JobStatus.COMPLETED);
+            job.setResult("Job processed successfully");
         } catch (Exception e) {
             job.setStatus(JobStatus.FAILED);
+            job.setResult("Job processing failed");
         }
     }
 }

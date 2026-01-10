@@ -3,16 +3,31 @@ const API_BASE = 'http://localhost:8080/api/jobs';
 document.getElementById("submitButton").addEventListener("click", submitJob);
 
 async function submitJob() {
-      const type = document.getElementById('jobType').value;
-      const payloadText = document.getElementById('payload').value;
-      const payload = JSON.parse(payloadText);
-      const response = await fetch(API_BASE, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type, payload })
-      });
-      const job = await response.json();
-      addJobToTable(job);
+    const statusDiv = document.getElementById("submitStatus");
+    try {
+          const type = document.getElementById('jobType').value;
+          const payloadText = document.getElementById('payload').value;
+          const payload = JSON.parse(payloadText);
+          const response = await fetch(API_BASE, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ type, payload })
+          });
+
+          if (!response.ok) {
+              const error = await response.text();
+              statusDiv.textContent = "Error: " + error;
+              return;
+          }
+
+          const job = await response.json();
+          statusDiv.textContent = `Job queued successfully | ID: ${job.jobId} | Status: ${job.status}`;
+          addJobToTable(job);
+
+    } catch (error) {
+          statusDiv.textContent = "Invalid payload JSON";
+    }
+
 }
 
 function addJobToTable(job) {

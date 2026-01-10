@@ -36,4 +36,8 @@ public class JobQueueService {
     public List<Job> getAllJobs() {
         return new ArrayList<>(jobs.values());
     }
+
+    public void resubmitJob(Job job) {
+        queue.offer(job);
+    }
 }

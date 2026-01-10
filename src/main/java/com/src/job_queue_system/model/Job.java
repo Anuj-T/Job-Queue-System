@@ -15,6 +15,8 @@ public class Job {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String result;
+    private int retryCount;
+    private int maxRetries;
 
     public Job(String jobId, String type, JobPayload payload) {
         this.jobId = jobId;
@@ -23,6 +25,17 @@ public class Job {
         this.status = JobStatus.QUEUED;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+        this.retryCount = 0;
+        this.maxRetries = 5;
+    }
+
+    public void incrementRetry() {
+        this.retryCount++;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public boolean canRetry() {
+        return retryCount < maxRetries;
     }
 
 }

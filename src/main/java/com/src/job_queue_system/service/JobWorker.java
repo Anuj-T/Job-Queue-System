@@ -40,9 +40,16 @@ public class JobWorker {
             job.setResult("Job processed successfully");
             job.setUpdatedAt(LocalDateTime.now());
         } catch (Exception e) {
-            job.setStatus(JobStatus.FAILED);
-            job.setResult("Job processing failed");
-            job.setUpdatedAt(LocalDateTime.now());
+            job.incrementRetry();
+            if (job.canRetry()) {
+                job.setStatus(JobStatus.QUEUED);
+                jobQueueService.resubmitJob(job);
+                job.setResult("Job Failed,retrying attempt : " + job.getRetryCount());
+            } else {
+                job.setStatus(JobStatus.FAILED);
+                job.setResult("Job processing failed");
+                job.setUpdatedAt(LocalDateTime.now());
+            }
         }
     }
 }

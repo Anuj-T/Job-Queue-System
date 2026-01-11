@@ -17,19 +17,22 @@ public class JobWorker {
 
     @PostConstruct
     public void startWorker() {
-        Thread worker = new Thread(() -> {
-            while (true) {
-                try {
-                    Job job = jobQueueService.pollJob();
-                    processJob(job);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
+        int workerCount = 3;
+        for (int i = 0; i < workerCount; i++) {
+            Thread worker = new Thread(() -> {
+                while (true) {
+                    try {
+                        Job job = jobQueueService.pollJob();
+                        processJob(job);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
                 }
-            }
-        });
-        worker.setDaemon(true);
-        worker.start();
+            });
+            worker.setDaemon(true);
+            worker.start();
+        }
     }
 
     private void processJob(Job job) {

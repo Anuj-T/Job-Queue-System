@@ -1,5 +1,5 @@
 const API_BASE = 'http://localhost:8080/api/jobs';
-
+let autoRefreshInterval = null;
 document.getElementById("submitButton").addEventListener("click", submitJob);
 
 async function submitJob() {
@@ -27,6 +27,7 @@ async function submitJob() {
           const job = await response.json();
           statusDiv.textContent = `Job queued successfully | ID: ${job.jobId} | Status: ${job.status}`;
           addJobToTable(job);
+          updateJobs();
 
     } catch (error) {
           statusDiv.textContent = "Error : Invalid payload JSON";
@@ -71,5 +72,12 @@ async function updateJobs() {
     }
 }
 
-setInterval(updateJobs, 5000);
+function toggleAutoRefresh() {
+    if (document.getElementById('autoRefresh').checked) {
+        autoRefreshInterval = setInterval(updateJobs, 5000);
+    } else {
+        clearInterval(autoRefreshInterval);
+    }
+}
+
 updateJobs();

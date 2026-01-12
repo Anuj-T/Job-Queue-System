@@ -1,3 +1,6 @@
+# Loom Link
+https://www.loom.com/share/6556efafead540789a3c9f88ed193a78
+
 # Job Queue System
 
 A Spring Boot application for managing and processing jobs asynchronously with multiple worker threads.
@@ -21,7 +24,7 @@ A Spring Boot application for managing and processing jobs asynchronously with m
 
 ### With Maven
 ```bash
-mvn spring-boot:run
+./mvnw spring-boot:run
 ```
 
 ### With Docker
